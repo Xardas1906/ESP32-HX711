@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Webinterface Drehmomentschlüssel</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Drehmomentschlüssel</h1>
+    </header>
+    <main>
+      <section id="measurement">
+        <h2>Messung</h2>
+        <div id="weightDisplay">Warte auf Daten...</div>
+        <canvas id="gauge"></canvas>
+        <div id="test">0</div>
+        <input type="number" id="torqueSetting" placeholder="Eingestelltes Drehmoment" />
+        <button id="tare">Tare</button>
+      </section>
+
+      <section id="history">
+        <h2>Historie</h2>
+        <canvas id="historyChart"></canvas>
+      </section>
+
+      <h2>Kalibrierung</h2>
+      <section id="calibration">
+        <input type="number" id="knownWeight" placeholder="Bekannte Größe" />
+        <button id="calibrate" onclick="calibrate()">Kalibrieren</button>
+      </section>
+      <section id="setCalibration">
+        <input type="number" id="calibrationFactorInput" placeholder="Kalibrierungsfaktor" />
+        <button id="setCalibrationFactor" onclick="setCalibrationFactor()">Setze Kalibrierungsfaktor</button>
+        <button id="reset_scale">Reset Kalibrierung</button>
+      </section>
+      <button id="saveCalibrationFactor">Save</button>
+      <div id="calibrationFactor">0</div>
+
+
+    </main>
+    <script src="jquery-3.7.1.min.js"></script>
+    <script src="gauge.min.js"></script>
+    <script src="chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+
+</html>
