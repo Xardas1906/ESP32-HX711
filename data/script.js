@@ -131,8 +131,7 @@ document.getElementById('tare').addEventListener('click', function() {
 
 //Einstellen des Drehmoments
 document.getElementById('torqueSetting').addEventListener('change', function() {
-  torqueSetting = document.getElementById('torqueSetting').value;
-  document.getElementById('test').textContent = `Test: ${Math.abs(torqueSetting)}`;
+  torqueSetting = Math.abs(document.getElementById('torqueSetting').value);
 });
 
 //Update der Werte für den Graphen

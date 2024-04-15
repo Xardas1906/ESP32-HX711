@@ -154,8 +154,8 @@ void processWebSocketMessage(uint8_t num, const String& message) {
     } else if (message.startsWith("calibrationFactorInput:")) {
         String calibrationFactorInputStr = message.substring(message.indexOf(':') + 1);
         float calibrationFactorInput = calibrationFactorInputStr.toFloat();
-        weight = calibrationFactorInput;
-         // calibrationFactor = calibrationFactorInput;
+         //weight = calibrationFactorInput;
+         calibrationFactor = calibrationFactorInput;
          Serial.println(calibrationFactor);
     } else if (message == "reset_scale") {
         calibrationFactor = 1;
@@ -177,7 +177,7 @@ void processWebSocketMessage(uint8_t num, const String& message) {
 
 void sendWeight() {
     if (scale.is_ready()) {
-        //weight = scale.get_units(5);
+        weight = scale.get_units(5);
         if (weight < 0) {
             weight = weight * -1;
         }
