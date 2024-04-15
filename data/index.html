@@ -26,20 +26,17 @@
         <h2>Historie</h2>
         <canvas id="historyChart"></canvas>
       </section>
-
-      <h2>Kalibrierung</h2>
+      
       <section id="calibration">
+        <h2>Kalibrierung</h2>
         <input type="number" id="knownWeight" placeholder="Bekannte Größe" />
         <button id="calibrate" onclick="calibrate()">Kalibrieren</button>
-      </section>
-      <section id="setCalibration">
         <input type="number" id="calibrationFactorInput" placeholder="Kalibrierungsfaktor" />
         <button id="setCalibrationFactor" onclick="setCalibrationFactor()">Setze Kalibrierungsfaktor</button>
         <button id="reset_scale">Reset Kalibrierung</button>
+        <button id="saveCalibrationFactor">Save</button>
+        <div id="calibrationFactor">0</div>
       </section>
-      <button id="saveCalibrationFactor">Save</button>
-      <div id="calibrationFactor">0</div>
-
 
     </main>
     <script src="jquery-3.7.1.min.js"></script>
