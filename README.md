@@ -17,7 +17,9 @@ This program implements a web-based interface for a torque wrench measurement sy
 1. **main.cpp**: Contains the ESP32 firmware. Manages WiFi and WebSocket server, handles sensor readings from the HX711 load cell, and stores calibration data using EEPROM.
 2. **index.html**: The main HTML document that structures the web interface.
 3. **style.css**: Defines the visual style and layout of the web interface.
-4. **script.js**: Contains all client-side JavaScript logic for updating the web interface, handling user inputs, and managing WebSocket messages.
+4. **script.js**: Contains all client-side JavaScript logic for updating the web interface, handling user inputs, and managing WebSocket messages.,
+5. **gauge.min.js** and **chart.js**: JavaScript libraries used for rendering the gauge and chart.
+6. **jquery-3.7.1.min.js**: jQuery library for DOM manipulations.
 
 #### Configuration
 
