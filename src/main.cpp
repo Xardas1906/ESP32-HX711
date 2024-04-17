@@ -10,7 +10,7 @@
 
 #define EEPROM_SIZE 512
 
-// Netzwerkkonfiguration
+// Network configuration
 const char* ssid = "ESP32";
 const char* password = "123456789";
 const String mdns = "esp32";
@@ -18,14 +18,14 @@ IPAddress local_ip(192, 168, 5, 1);
 IPAddress gateway(192, 168, 5, 1);
 IPAddress subnet(255, 255, 255, 0);
 
-// Server-Konfiguration
+// Server-Configuration
 const int HTTP_PORT = 80;
 const int WS_PORT = 81;
 WebServer server(HTTP_PORT);
 WebSocketsServer webSocket = WebSocketsServer(WS_PORT);
 
 // Timing
-const unsigned long weightSendInterval = 100;  // Intervall in Millisekunden
+const unsigned long weightSendInterval = 100;  // Interval in milliseconds
 unsigned long lastWeightSendTime = 0;
 
 // Load Cell Pins
@@ -56,16 +56,14 @@ void setup() {
     // Initialize mDNS
     if (!MDNS.begin(mdns)) {
         Serial.println("Error setting up MDNS responder!");
-        return;  // Statt einer Endlosschleife, zurückkehren.
+        return;  // Instead of an endless loop, return.
     }
 
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 
     EEPROM.get(0, calibrationFactor);
     scale.set_scale(calibrationFactor);
-    if (calibrationFactor < 1) {
-        calibrationFactor = 1;
-    }
+    scale.tare();
     Serial.println("Calibration factor: " + String(scale.get_scale()));
 
     server.onNotFound(handleWebRequests);
@@ -103,7 +101,7 @@ void handleWebRequests() {
 }
 
 bool loadFromSpiffs(String path) {
-    Serial.println("Trying to load from SPIFFS: " + path); // Debug-Ausgabe des Pfades
+    Serial.println("Trying to load from SPIFFS: " + path); // Debug output of the path
     String dataType = "text/plain";
     if(path.endsWith("/")) path += "index.html";
     if(path.endsWith(".src")) path = path.substring(0, path.lastIndexOf("."));
@@ -121,10 +119,10 @@ bool loadFromSpiffs(String path) {
     else if(path.endsWith(".zip")) dataType = "application/zip";
     File dataFile = SPIFFS.open(path.c_str(), "r");
     if (!dataFile) {
-        Serial.println("Failed to open file for reading: " + path); // Zeigt eine Fehlermeldung, wenn die Datei nicht geöffnet werden konnte
+        Serial.println("Failed to open file for reading: " + path); // Shows an error message if the file could not be opened
         return false;
     }
-    Serial.println("Successfully opened: " + path); // Bestätigung, dass die Datei geöffnet wurde
+    Serial.println("Successfully opened: " + path); // Confirmation that the file has been opened
     if(server.hasArg("download")) dataType = "application/octet-stream";
     size_t sent = server.streamFile(dataFile, dataType);
     dataFile.close();
@@ -142,11 +140,10 @@ void processWebSocketMessage(uint8_t num, const String& message) {
         String knownWeightStr = message.substring(message.indexOf(':') + 1);
         float knownWeight = knownWeightStr.toFloat();
         if (knownWeight > 0) {
-            float rawValue = scale.get_units(10);
+            long rawValue = scale.get_units(10);
             calibrationFactor = rawValue / knownWeight;
             scale.set_scale(calibrationFactor);
             Serial.println("New calibration factor set: " + String(calibrationFactor));
-            webSocket.sendTXT(num, "Calibration factor updated to " + String(calibrationFactor));
             webSocket.broadcastTXT("calibrationFactor:" + String(calibrationFactor));
         } else {
             webSocket.sendTXT(num, "Invalid weight input");
@@ -154,9 +151,9 @@ void processWebSocketMessage(uint8_t num, const String& message) {
     } else if (message.startsWith("calibrationFactorInput:")) {
         String calibrationFactorInputStr = message.substring(message.indexOf(':') + 1);
         float calibrationFactorInput = calibrationFactorInputStr.toFloat();
-         //weight = calibrationFactorInput;
-         calibrationFactor = calibrationFactorInput;
-         Serial.println(calibrationFactor);
+        //weight = calibrationFactorInput;
+        calibrationFactor = calibrationFactorInput;
+        Serial.println("New calibration factor set: " + String(calibrationFactor));
     } else if (message == "reset_scale") {
         calibrationFactor = 1;
         scale.set_scale(calibrationFactor);
@@ -172,7 +169,7 @@ void processWebSocketMessage(uint8_t num, const String& message) {
         EEPROM.put(0, calibrationFactor);
         EEPROM.commit();
     }
-    // Hier können weitere Nachrichten hinzufügen und verarbeiten
+    // Further messages can be added and processed here
 }
 
 void sendWeight() {
