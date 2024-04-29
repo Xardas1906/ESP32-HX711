@@ -62,8 +62,13 @@ void setup() {
     scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 
     EEPROM.get(0, calibrationFactor);
+    if (isnan(calibrationFactor)) 
+    {
+        calibrationFactor = 1;
+    }
     scale.set_scale(calibrationFactor);
     scale.tare();
+    
     Serial.println("Calibration factor: " + String(scale.get_scale()));
 
     server.onNotFound(handleWebRequests);
